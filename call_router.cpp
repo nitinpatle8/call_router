@@ -38,7 +38,7 @@ class Exchange{ // Consider Exchange and base station same
             return this->id_no;
         }
         int getBaseNo(){
-            return this->base_no;
+            return this->base_no; // if base no is -1 means it is not base station
         }
         void setBaseNo(int base_no){
             this->base_no = base_no;
