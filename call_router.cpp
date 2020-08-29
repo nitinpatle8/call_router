@@ -1,4 +1,5 @@
 #include <iostream>
+#include <stack>
 
 using namespace std;
 
@@ -13,6 +14,8 @@ using namespace std;
 int base_no_counter = 0;
 
 ll *arr = (ll *)malloc(sizeof(ll) * MAX_BASE * MAX_MOBILE);
+
+Exchange **ex = (Exchange**) malloc(sizeof(Exchange**)*MAX_BASE);
 
 class Exchange
 { // Consider Exchange and base station same
@@ -89,6 +92,7 @@ Exchange *createTree()
     {
         e = new Exchange();
         e->setBaseNo(base_no_counter);
+        ex[base_no_counter] = e;
         base_no_counter += 1;
         setMobileNos(e);
     }
@@ -98,24 +102,38 @@ Exchange *createTree()
         int treechoice;
         cout << "Press 1 for left tree or 0 for exit:";
         cin >> treechoice;
+        int start = 0;
         if (treechoice)
         {
-            e->left = createTree();
+            Exchange *eLeft = e->left = createTree();
+            int i;
+            if(eLeft){
+                for(i = 0; i<MAX_BASE && eLeft->set[i]!=-1; i++){
+                    e->set[i] = eLeft->set[i];
+                }
+                start = i;
+            }
+            
         }
         cout << "Press 1 for right tree or 0 for exit:";
         cin >> treechoice;
         if (treechoice)
         {
-            e->right = createTree();
+            Exchange *eRight = e->right = createTree();
+            if(eRight){
+                int i;
+                for(i = 0; i<MAX_BASE && eRight->set[i]!=-1; i++){
+                    e->set[i+start] = eRight->set[i];
+                }
+            }
+        
         }
     }
     return e;
 }
 
 // create a function initialise the exchanges to set the Set array in exchange
-void initialiseExchanges(Exchange *e)
-{
-}
+
 
 // isEmpty function checks if there exists any mobile No listed in common Mobile array
 
@@ -259,28 +277,130 @@ int findPhone(Exchange *e, ll m)
 
 // Exchange lowestRouter (base a, base b) this function finds out the common ancestor in the tree
 Exchange* lowestRouter(Exchange* root, Exchange *a, Exchange *b){
-
     Exchange *rootLeft = lowestRouter(root->left, a, b);
-    
+    Exchange *rootRight = lowestRouter(root->right, a, b);
+
+    if(root == a) return a;
+    if(root == b) return b;
+    if(rootLeft == a && rootRight == b) return root;
+    if(rootLeft) return rootLeft;
+    if(rootRight) return rootRight;
+    return NULL;
 
 }
 
-// ExchangeList routeCall(MobilePhone a, MobilePhone b) finding shorted path from one node to another.
-// Exchange** routeCall(ll a, ll b){
 
-// }
+// stores path from common anscestor to the exchange b in stack v
+bool pathFromCommonAnscestor(Exchange *lcr, Exchange *b, stack<Exchange*> &v){
+    if(lcr){
+        v.push(lcr);
+        if(lcr == b){
+            return true;
+        }
+        bool eLeft = pathFromCommonAnscestor(lcr->left, b, v);
+    
+        if(eLeft){
+            return true;
+        }
+
+        bool eRight = pathFromCommonAnscestor(lcr->right, b, v);
+        if(eRight){
+            return true;
+        }
+        v.pop();
+    }
+    return false;
+}
+// commonPath finds the common path between two base stations
+// given a , b are 2 base stations 
+stack<Exchange*> &commonPath(Exchange *root, Exchange *a, Exchange *b){
+
+    Exchange *lcr = lowestRouter(root, a, b);
+    stack<Exchange*> *s1 = new stack<Exchange*>;
+    pathFromCommonAnscestor(lcr, a, *s1);
+    stack<Exchange*> *s2 = new stack<Exchange*>;
+    pathFromCommonAnscestor(lcr, b, *s2);
+
+    Exchange *temp = NULL;
+    while(s1->top() == s2->top()){
+        temp = s1->top();
+        s1->pop();
+        s2->pop();
+    }
+    if(temp) s1->push(temp);
+    return *s1;
+}
+
+// ExchangeList routeCall(MobilePhone a, MobilePhone b) finding shorted path from one node to another.
+
+stack<Exchange*> *routeCall(Exchange *root, ll a, ll b){
+
+
+    int baseA = findPhone(root, a);
+    int baseB = findPhone(root, b);
+    if(baseA>0 && baseB>0){
+        Exchange *baseExA =  ex[baseA];
+        Exchange *baseExB = ex[baseB];
+        stack<Exchange*> *s = &commonPath(root, baseExA, baseExB);
+        return s;
+    }
+    return NULL;
+}
 
 // movePhone (MobilePhone a, base b): This method modifies the routing tree by changing the
 // location of mobile phone a from its current base-station to the base station b. As an effect, lot of
 // other data (sets of mobiles maintained at different levels) that is maintained could also change.
 // delete mobile no m from its current exchange to exchange e
 // simple one
-// bool movePhone(ll m, Exchange *e){
+bool movePhone(ll m, Exchange *e, Exchange *root){
 
-// }
+    int baseM = findPhone(root, m);
+    Exchange *baseStation = ex[baseM];
+    bool flag1 = deleteMobile(baseStation, m);
+    bool flag2 = true;
+    if(flag1){
+        flag2 = insertMobile(e, m);
+    }
+    if(flag1 && flag2)
+        return true;
+    return false; 
+}
+
+
+// print the stack
+void printStack(stack<Exchange*> &s){
+
+
+
+}
+
 
 int main()
 {
-    createTree();
+
+    cout << "###############Welcome to Call Router Solutions By Zeonpi.it############" << endl;
+
+    cout << "******First you have to create the tree" << endl;
+
+    Exchange *e = createTree();
+
+    int choice;
+
+    cout << "Select the options given below" << endl;
+
+    cout << "1. Has anyone registered to our mobile Services" << endl;
+    cout << "2. Is your mobile number listed to our telecom Services" << endl;
+    cout << "3. Register your mobile number by base station id no i.e. location" << endl;
+    cout << "4. Deregister your mobile number" << endl;
+    cout << "5. Find where your mobile number location is"<< endl;
+    cout << "6. Moving your mobile number to another" << endl;
+    cout << "7. Move your mobile number to Base Station A to Base Station B" << endl;
+
+    cin >> choice;
+    switch(choice){
+    
+    }
+
+
     return 0;
 }
