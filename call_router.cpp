@@ -258,9 +258,11 @@ int findPhone(Exchange *e, ll m)
 }
 
 // Exchange lowestRouter (base a, base b) this function finds out the common ancestor in the tree
-// Exchange* lowestRouter(Exchange *a, Exchange *b){
+Exchange* lowestRouter(Exchange* root, Exchange *a, Exchange *b){
 
-// }
+    Exchange *rootLeft = lowestRouter(root->left, a, b);
+
+}
 
 // ExchangeList routeCall(MobilePhone a, MobilePhone b) finding shorted path from one node to another.
 // Exchange** routeCall(ll a, ll b){
