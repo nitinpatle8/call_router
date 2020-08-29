@@ -8,11 +8,11 @@ using namespace std;
 #define ll long long int 
 
 // h stands for hash Value Of 
-#define h(base_no, x) (base_no%MAX_BASE)*100 + x%100 
+#define h(base_no, x) (base_no%MAX_MOBILE)*100 + x%MAX_MOBILE 
 
 int base_no_counter = 0;
 
-long long int arr[MAX_BASE*MAX_MOBILE];
+ll *arr = (ll*) malloc(sizeof(ll)*MAX_BASE*MAX_MOBILE);
 
 class Exchange{ // Consider Exchange and base station same
     private:
