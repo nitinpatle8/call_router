@@ -261,6 +261,7 @@ int findPhone(Exchange *e, ll m)
 Exchange* lowestRouter(Exchange* root, Exchange *a, Exchange *b){
 
     Exchange *rootLeft = lowestRouter(root->left, a, b);
+    
 
 }
 
