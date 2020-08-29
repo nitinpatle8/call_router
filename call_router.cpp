@@ -28,6 +28,7 @@ public:
     Exchange *left;
     Exchange *right;
     static int id_count;
+    // int set_count;
     Exchange()
     {
         for (int i = 0; i < MAX_BASE; i++)
@@ -39,6 +40,7 @@ public:
         this->right = NULL;
         // this->base_no = id_count + 1;
         id_count += 1;
+        // set_count = 0;
     }
     int getId()
     {
@@ -53,7 +55,9 @@ public:
         this->base_no = base_no;
     }
 };
+
 int Exchange::id_count = 0;
+
 void setMobileNos(Exchange *e)
 {
     int n;
@@ -134,7 +138,6 @@ Exchange *createTree()
 
 // create a function initialise the exchanges to set the Set array in exchange
 
-
 // isEmpty function checks if there exists any mobile No listed in common Mobile array
 
 bool isEmpty(Exchange *e)
@@ -161,7 +164,7 @@ bool isMember(Exchange *e, ll m)
         {
             int t = h(e->set[i], m), copy_value = t;
             int index = e->set[i] % MAX_BASE * 100 + MAX_MOBILE;
-            while (arr[t] != 0)
+            while (arr[t] != 0 || arr[t]!=-1)
             {
                 if (arr[t] == m)
                 {
@@ -191,7 +194,7 @@ bool insertMobile(Exchange *e, ll mobileNo)
 {
     int t = h(e->base_no, mobileNo);
     int index = e->base_no % MAX_BASE * 100 + MAX_MOBILE; // LAST LOCATION OF BASE STATION INDEX
-    while (arr[t] != 0)
+    while (arr[t] != 0 || arr[t]!=-1)
     {
         t += 1;
         if (t == index)
@@ -213,7 +216,7 @@ bool deleteMobile(Exchange *e, ll mobileNo)
     {
         if (arr[t] == mobileNo)
         {
-            arr[t] = 0;
+            arr[t] = -1;
             retval = true;
             break;
         }
@@ -223,7 +226,7 @@ bool deleteMobile(Exchange *e, ll mobileNo)
             cout << "There is no such number present:" << mobileNo << endl;
             break; //this indicates whole base stations member has checked and now the loop is starting to run again
         }
-        if (t == index)
+       else if (t == index)
         {
             t = e->base_no % MAX_BASE * 100;
         }
