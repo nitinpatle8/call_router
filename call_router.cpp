@@ -25,6 +25,7 @@ public:
     Exchange *left;
     Exchange *right;
     static int id_count;
+    int set_count;
     Exchange()
     {
         for (int i = 0; i < MAX_BASE; i++)
@@ -34,8 +35,9 @@ public:
         this->base_no = -1;
         this->left = NULL;
         this->right = NULL;
-        this->base_no = id_count + 1;
+        // this->base_no = id_count + 1;
         id_count += 1;
+        set_count = 0;
     }
     int getId()
     {
@@ -50,7 +52,9 @@ public:
         this->base_no = base_no;
     }
 };
+
 int Exchange::id_count = 0;
+
 void setMobileNos(Exchange *e)
 {
     int n;
@@ -115,6 +119,25 @@ Exchange *createTree()
 // create a function initialise the exchanges to set the Set array in exchange
 void initialiseExchanges(Exchange *e)
 {
+
+    if(e){
+        Exchange *eLeft = e->left;
+        Exchange *eRight = e->right;
+        int start = 0;
+        if(eLeft){
+            for(int i = 0; i<eLeft->set_count && eLeft->set[i]!=-1; i++){
+                e->set[i] = eLeft->set[i];
+            }
+            start = eLeft->set_count;
+        }
+        if(eRight){
+            for(int i = 0; i<eRight->set_count && eRight->set[i]!=-1; i++){
+                e->set[i+start] = eRight->set[i];
+            }
+        }
+        initialiseExchanges(e->left);
+        initialiseExchanges(e->right);
+    }
 }
 
 // isEmpty function checks if there exists any mobile No listed in common Mobile array
@@ -187,7 +210,7 @@ bool insertMobile(Exchange *e, ll mobileNo)
 // Delete (MobilePhone m): Deletes m from the set/tree, return false if m is not in the set.
 // Here Exchange *e is the base station
 bool deleteMobile(Exchange *e, ll mobileNo)
-{
+
     bool retval = false;
     int t = h(e->base_no, mobileNo), copy_value = t;
     int index = e->base_no % MAX_BASE * 100 + MAX_MOBILE; // LAST LOCATION OF BASE STATION INDEX
