@@ -46,6 +46,8 @@ class Exchange{ // Consider Exchange and base station same
 
 };
 
+int Exchange::id_count = 0;
+
 void setMobileNos(Exchange *e){
     int n;
     cout << "Enter number of Mobiles you wanna add" << endl;
