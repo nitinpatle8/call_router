@@ -381,11 +381,12 @@ bool movePhone(ll m, Exchange *e, Exchange *root){
 
 
 // print the stack
-void printStack(stack<Exchange*> &s){
- while (!s.empty()) { 
-        cout<<"The Id_Number Is:"<<s.top()->id_no<<endl; 
-        s.pop(); 
+void printVector(vector<Exchange*> &s){
+ 
+    for(int i = 0; i<s.size(); i++){
+        cout << s[i] << " ";
     }
+    cout << endl;
 
 }
 
