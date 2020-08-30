@@ -15,6 +15,7 @@ int base_no_counter = 0;
 
 ll *arr = (ll *)malloc(sizeof(ll) * MAX_BASE * MAX_MOBILE);
 
+// to store the address of base station address from base no
 Exchange **ex = (Exchange**) malloc(sizeof(Exchange**)*MAX_BASE);
 
 class Exchange
@@ -373,7 +374,7 @@ bool movePhone(ll m, Exchange *e, Exchange *root){
 // print the stack
 void printStack(stack<Exchange*> &s){
  while (!s.empty()) { 
-        cout<<"The Id_Number Is:"<<s.top()->id_no<<endl; ; 
+        cout<<"The Id_Number Is:"<<s.top()->id_no<<endl; 
         s.pop(); 
     }
 
@@ -395,73 +396,82 @@ int main()
 
     cout << "1. Has anyone registered to our mobile Services:" << endl;
     cout << "2. Is your mobile number listed to our telecom Services:" << endl;
-    cout << "3. Register your mobile number by base station id no i.e. location:" << endl;
+    // insert mobile number
+    cout << "3. Register your mobile number by base station base no i.e. location:" << endl;
+    // delete mobile number
     cout << "4. Deregister your mobile number:" << endl;
     cout << "5. Find where your mobile number location is:"<< endl;
-    // cout << "6. Moving your mobile number to another:" << endl;
+    cout << "6. Moving your mobile number to another:" << endl;
     cout << "7. Move your mobile number to Base Station A to Base Station B:" << endl;
 
     cin >> choice;
     switch(choice){
         case 1:
-        bool ans=isEmpty(e);
-        if(ans==true)
-        {
-            cout<<"Yes We have lot of customers for privacy we can't show their numbers;"<<endl;
-        }
-        else
-        {
-            cout<<"Sorry We don't have customers Bt in future we will have most customers in World:"<<endl;
-        }
-        break;
+                // e is the root exchange
+                bool ans=isEmpty(e);
+                if(ans==true)
+                {
+                    cout<<"Yes We have lot of customers for privacy we can't show their numbers;"<<endl;
+                }
+                else
+                {
+                    cout<<"Sorry We don't have customers Bt in future we will have most customers in World:"<<endl;
+                }
+                break;
         case 2:
-        long long int mobile_no;
-        cin>>mobile_no;
-        bool ans=isMember(e,mobile_no);
-        if(ans==true)
-        {
-            cout<<"	We are happy to say that You are our friendly customer:"<<endl;
-        }
-        else
-        {
-            cout<<"Sorry to say that bt You are not our customer so join us for your benefit:"<<endl;
-        }
-        break;
+                ll mobile_no;
+                cin>>mobile_no;
+                bool ans=isMember(e,mobile_no);
+                if(ans==true)
+                {
+                    cout<<"	We are happy to say that You are our friendly customer:"<<endl;
+                }
+                else
+                {
+                    cout<<"Sorry to say that bt You are not our customer so join us for your benefit:"<<endl;
+                }
+                break;
         case 3:
-      
-        break;
+                int base_no;
+                cin >> base_no;
+                ll mobile_no;
+                cin >> mobile_no;
+                Exchange *bs = ex[base_no];
+                insertMobile(bs, mobile_no);
+                break;
         case 4:
-        long long int mobile_no;
-        cin>>mobile_no;
-        bool ans=deleteMobile(e,mobile_no);
-        if(ans==true)
-        {
-            cout<<"	Sorry to let you go:"<<endl;
-        }
-        else
-        {
-            cout<<"You already deregistered yourself:"<<endl;
-        }
-        break;
+                long long int mobile_no;
+                cin>>mobile_no;
+                bool ans=deleteMobile(e,mobile_no);
+                if(ans==true)
+                {
+                    cout<<"	Sorry to let you go:"<<endl;
+                }
+                else
+                {
+                    cout<<"You already deregistered yourself:"<<endl;
+                }
+                break;
         case 5:
-        long long int mobile_no;
-        int ans=findPhone(e,mobile_no);
-        if(ans==-1)
-        {
-            cout<<"	Sorry to say that you are not Registered On Network:"<<endl;
-        }
-        else
-        {
-            cout<<"The Bast station You are connected Is:"<<ans<<endl;
-        }
-        break;
+                long long int mobile_no;
+                int ans=findPhone(e,mobile_no);
+                if(ans==-1)
+                {
+                    cout<<"	Sorry to say that you are not Registered On Network:"<<endl;
+                }
+                else
+                {
+                    cout<<"The Bast station You are connected Is:"<<ans<<endl;
+                }
+                break;
         case 6:
-        break;
+                
+                break;
         case 7:
         
-        break;
+                break;
         default:
-        cout<<"Give an right Input:"<<endl;
+            cout<<"Give an right Input:"<<endl;
         break;
     
     }
