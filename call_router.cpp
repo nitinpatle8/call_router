@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <stack>
+#include <vector>
 
 using namespace std;
 
@@ -301,13 +302,10 @@ Exchange *lowestRouter(Exchange *root, Exchange *a, Exchange *b)
 }
 
 // stores path from common anscestor to the exchange b in stack v
-bool pathFromCommonAnscestor(Exchange *lcr, Exchange *b, stack<Exchange *> &v)
-{
-    if (lcr)
-    {
-        v.push(lcr);
-        if (lcr == b)
-        {
+bool pathFromCommonAnscestor(Exchange *lcr, Exchange *b, vector<Exchange*> &v){
+    if(lcr){
+        v.push_back(lcr);
+        if(lcr == b){
             return true;
         }
         bool eLeft = pathFromCommonAnscestor(lcr->left, b, v);
@@ -322,36 +320,41 @@ bool pathFromCommonAnscestor(Exchange *lcr, Exchange *b, stack<Exchange *> &v)
         {
             return true;
         }
-        v.pop();
+        v.pop_back();
     }
     return false;
 }
 // commonPath finds the common path between two base stations
-// given a , b are 2 base stations
-stack<Exchange *> &commonPath(Exchange *root, Exchange *a, Exchange *b)
-{
+// given a , b are 2 base stations 
+vector<Exchange*> &commonPath(Exchange *root, Exchange *a, Exchange *b){
 
     Exchange *lcr = lowestRouter(root, a, b);
-    stack<Exchange *> *s1 = new stack<Exchange *>;
+    vector<Exchange*> *s1 = new vector<Exchange*>;
     pathFromCommonAnscestor(lcr, a, *s1);
-    stack<Exchange *> *s2 = new stack<Exchange *>;
+    vector<Exchange*> *s2 = new vector<Exchange*>;
     pathFromCommonAnscestor(lcr, b, *s2);
 
     Exchange *temp = NULL;
-    while (s1->top() == s2->top())
-    {
-        temp = s1->top();
-        s1->pop();
-        s2->pop();
+    int size1 = s1->size();
+    int size2 = s2->size();
+    int i = size1-1;
+    int j = size2 - 1;
+    
+    while(i>0 && j>0 && (*s1)[i] == (*s2)[j] && (*s1)[i-1] == (*s2)[j-1]){
+        temp = (*s1)[i];
+        s1->pop_back();
+        s2->pop_back();
+        i--;
+        j--;
     }
-    if (temp)
-        s1->push(temp);
-    return *s1;
+    
+    return (*s1);
+
 }
 
 // ExchangeList routeCall(MobilePhone a, MobilePhone b) finding shorted path from one node to another.
 
-stack<Exchange *> *routeCall(Exchange *root, ll a, ll b)
+vector<Exchange *> *routeCall(Exchange *root, ll a, ll b)
 {
 
     int baseA = findPhone(root, a);
@@ -360,7 +363,7 @@ stack<Exchange *> *routeCall(Exchange *root, ll a, ll b)
     {
         Exchange *baseExA = ex[baseA];
         Exchange *baseExB = ex[baseB];
-        stack<Exchange *> *s = &commonPath(root, baseExA, baseExB);
+        vector<Exchange *> *s = &commonPath(root, baseExA, baseExB);
         return s;
     }
     return NULL;
@@ -388,13 +391,13 @@ bool movePhone(ll m, Exchange *e, Exchange *root)
 }
 
 // print the stack
-void printStack(stack<Exchange *> &s)
-{
-    while (!s.empty())
-    {
-        cout << "The Id_Number Is:" << s.top()->id_no << endl;
-        s.pop();
+void printVector(vector<Exchange*> &s){
+ 
+    for(int i = 0; i<s.size(); i++){
+        cout << s[i] << " ";
     }
+    cout << endl;
+
 }
 
 int main()
@@ -531,7 +534,7 @@ int main()
                 cin >> b;
                 ea = ex[a];
                 eb = ex[b];
-                printStack(commonPath(e, ea, eb));
+                printVector(commonPath(e, ea, eb));
                 break;
             case 8:
                 cout << "	For  changing base station:" << endl;
